@@ -25,5 +25,3 @@ class Command(connector.Manager.Base):
     id = Column(Integer, Sequence('command_id_seq'), primary_key=True)
     name = Column(String(20))  # name of each command
     description = Column(String(1000))
-    written_by_name = Column(String, ForeignKey('users.username'))  # name of user who added this command to the command library
-    written_by = relationship(User, foreign_keys=[written_by_name])  # user entity that wrote this command

@@ -120,12 +120,6 @@ def get_messages(user_from_id, user_to_id):
     more_messages = db_session.query(entities.Message).filter(entities.Message.user_from_id == user_to_id).filter(entities.Message.user_to_id == user_from_id).all()
     messages = more_messages + messages
 
-    # Sort messages by date sent
-    # for i in range(0, len(messages)):
-    #     for j in range(0, len(messages)-i-1):
-    #         if messages[i].id > messages[i+1].id:
-    #             messages[i], messages[i+1] = messages[i+1], messages[i]
-
     data = []
     for message in messages:
         data.append(message)
@@ -164,6 +158,14 @@ def delete_messages(user_from_id, user_to_id):
 
 ##### PROYECTO MOBILE #####
 
+@app.route('/create_commands', methods=['GET'])
+def create_commands():
+    db_session = db.getSession(engine)
+    command = entities.Command(name="cal", description="cal shows the calendar of the current month and highlights the current day.")
+    db_session.add(command)
+    db_session.commit()
+    return "Test command created " + command.name + "  " + command.description
+
 @app.route('/commands', methods=['GET'])
 def get_commands():
     dbSession = db.getSession(engine)
@@ -181,9 +183,8 @@ def create_command():
     data = json.loads(request.data)
     name = data['name']
     description = data['description']
-    written_by_name = data['written_by_name']
 
-    command = entities.Command(name=name, description=description, written_by_name=written_by_name)
+    command = entities.Command(name=name, description=description)
 
     dbSession = db.getSession(engine)
     dbSession.add(command)
